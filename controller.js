@@ -1,5 +1,6 @@
 const readlineSync = require('readline-sync');
 const { EOL } = require('os');
+const chalk = require('chalk');
 
 class Controller {
   constructor(model, view) {
@@ -8,9 +9,9 @@ class Controller {
   }
 
   play() {
-    console.log(`${EOL}Здравствуйте, ЛЮДИ!`);
+    console.log(chalk.bold(`${EOL}ЗДРАВСТВУЙТЕ, ЛЮДИ!`));
     this.model.getThemes().then(async (themesData) => {
-      const userName = readlineSync.question('Введите имя: ');
+      const userName = readlineSync.question(chalk.bold.blue('Введите имя: '));
       const themeIndex = readlineSync.keyInSelect(
         themesData,
         `Выберите тему: ${EOL}`
@@ -26,7 +27,20 @@ class Controller {
           count += 100;
         } else this.view.falseOutput(questionsData[i]);
       }
-      console.log(`${userName}! Спасибо! Твой результат: ${count}`);
+
+      if (count < 500) {
+        console.log(
+          chalk.magenta(
+            `${userName}! ПОЗДРАВЛЯЮ, ТЫ ОТЧИСЛЕН! Твой результат: ${count} из 500`
+          )
+        );
+      } else {
+        console.log(
+          chalk.yellowBright(
+            `${userName}! Поздравляю! Ты не отчислен! Твой результат: ${count} из 500`
+          )
+        );
+      }
     });
   }
 }
